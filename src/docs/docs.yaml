@@ -1,0 +1,81 @@
+openapi: 3.0.3
+info:
+  title: 'eUniversity Africa API Docs'
+  description: 'API docs for eUniversity Africa with more details'
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:4000'
+  - url: /
+
+security:
+  - bearerAuth: []
+paths:
+  /healthcheck:
+    get:
+      tags:
+        - Healthcheck
+      description: 'Healthcheck endpoint'
+      responses:
+        '200':
+          description: 'Responds if the server is up and running'
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      description: 'Login endpoint'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        '200':
+          description: 'Responds with the user and token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          required: true
+          default: 'paul@gmail.com'
+        password:
+          type: string
+          required: true
+          default: 'password123'
+    LoginResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        token:
+          type: string
+        data:
+          type: object
+          properties:
+            userId:
+              type: string
+            email:
+              type: string
+            firstName:
+              type: string
+            lastName:
+              type: string
+            role:
+              type: string
+    Unauthorized:
+      type: object
+      properties:
+        message:
+          type: string

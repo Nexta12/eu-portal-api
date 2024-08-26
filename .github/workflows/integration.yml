@@ -1,0 +1,56 @@
+# # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+# # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+# name: Integration Workflow
+
+# on:
+#   push:
+#     branches: ['main']
+#   pull_request:
+#     branches: ['main']
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       matrix:
+#         node-version: [16.x, 18.x]
+
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v3
+
+#       - name: Use Node.js ${{ matrix.node-version }}
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: ${{ matrix.node-version }}
+#           cache: 'yarn'
+
+#       - name: Install Packages
+#         run: yarn install
+
+#       - name: Check for linting issues
+#         run: yarn run lint
+
+#       - name: Build dist
+#         run: yarn run dev:build
+
+#       - name: Run tests
+#         env:
+#           CI: true
+#           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+#           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+#           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+#           POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+#           POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+#           SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+#           PAYSTACK_SECRET_KEY: ${{ secrets.PAYSTACK_SECRET_KEY }}
+#           CLIENT_BASE_URL: ${{ secrets.CLIENT_BASE_URL }}
+#           SYNCHRONIZE_DB: true
+#           USE_TS_ENTITY_MIGRATION: true,
+#           CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+#           CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+#           CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+#         run: yarn test

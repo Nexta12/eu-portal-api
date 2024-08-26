@@ -1,0 +1,30 @@
+services:
+  api:
+    container_name: 'api'
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    depends_on:
+      - postgres
+    expose:
+      - '${PORT}/tcp'
+    restart: always
+    ports:
+      - ${PORT}:${PORT}
+    env_file:
+      - .env
+    volumes:
+      - ./src:/app/src
+      - ./nodemon.json:/app/nodemon.json
+    command: node dist/index.js
+  postgres:
+    container_name: db
+    image: 'postgres:13'
+    restart: always
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    env_file:
+      - .env
+    volumes:
+      - ./data:/var/lib/postgresql/data
