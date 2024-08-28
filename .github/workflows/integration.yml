@@ -75,7 +75,7 @@ jobs:
             fi
             echo "Installing dependencies"
             if ! yarn install; then
-              echo "Failed to install dependencies"
+              echo "Failed to install dependencies as required"
               exit 1
             fi
             echo "Stopping server to rebuild"
