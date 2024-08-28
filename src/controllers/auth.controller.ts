@@ -9,7 +9,7 @@ import { JWT_KEY } from '../config/data';
 import { ChatMessageEntity, LiveChatEntity, ResetPasswordTokenEntity, StaffEntity, StudentEntity, UserRole } from '../entities';
 import { logger } from '../services';
 import { IExtendedRequest } from '../types/JwtPayload';
-import { BCRYPT_SALT_ROUNDS, HTTP_STATUS, handleGetRepository } from '../utils';
+import { BCRYPT_SALT_ROUNDS, EMAIL_FROM, HTTP_STATUS, handleGetRepository } from '../utils';
 import { ChatUserEntity } from '../entities/ChatUsersEntity';
 import { sendEMail } from '../config/nodemailerClient';
 import { generateForgotPasswordEmailTemplate } from '../templates/emailTemplates';
@@ -228,7 +228,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
     });
     await passwordResetTokenRepository.save(passwordResetToken);
     await sendEMail({
-      from: 'tech@revclient.com',
+      from: EMAIL_FROM,
       to: email,
       subject: 'Action Required: eUniversity Africa login details',
       html: generateForgotPasswordEmailTemplate(resetToken, student.userId)

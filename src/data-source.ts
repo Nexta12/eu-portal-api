@@ -4,7 +4,9 @@ import 'reflect-metadata';
 
 import envConfig from './config/envConfig';
 
- const syncDatabase = envConfig.SYNCHRONIZE_DB;
+//  const syncDatabase = envConfig.SYNCHRONIZE_DB;
+const syncDatabase = envConfig.NODE_ENV === 'production' ? false : envConfig.SYNCHRONIZE_DB;
+
 // const syncDatabase = false;
 const useTsEntityMigration = envConfig.USE_TS_ENTITY_MIGRATION;
 

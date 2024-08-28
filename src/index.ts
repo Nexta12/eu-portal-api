@@ -15,24 +15,25 @@ import { Gender, StaffEntity, UserRole } from './entities';
 const { PORT } = envConfig;
 
 const main = async () => {
+
+  const staffRepository = dataSource.AppDataSource.getRepository(StaffEntity);
   try {
-    await dataSource.AppDataSource.initialize();
 
     const adminDetails: DeepPartial<StaffEntity> = {
       firstName: 'Ernest',
       lastName: 'Udeze',
       email: 'ernestez12@gmail.com',
       password: await bcrypt.hash('select12', 10),
-      role: UserRole.ADMIN,
       gender: Gender.MALE,
       phoneNumber: '08134728997',
       address: 'Lagos Nigeria',
+      role: UserRole.ADMIN,
       dateOfEmployment: new Date('1990-06-15'),
       cityOfResidence: 'Lagos',
       designation: 'Software Developer',
     };
-
-    const staffRepository = dataSource.AppDataSource.getRepository(StaffEntity);
+    await dataSource.AppDataSource.initialize();
+  
     const existingAdmin = await staffRepository.findOne({ where: { email: adminDetails.email } });
 
     if (existingAdmin) {

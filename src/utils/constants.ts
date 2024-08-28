@@ -18,7 +18,7 @@ export const MINIMUM_PASSWORD_LENGTH = 6;
 export const PAYSTACK_BASE_URL = 'https://api.paystack.co';
 export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
 export const BCRYPT_SALT_ROUNDS = 10;
-export const EMAIL_FROM = 'oluwalusijohn@gmail.com';
+export const EMAIL_FROM = 'info@euniversityedu.africa';
 
 // Make sure frontend and backend have the same value for DOLLAR_TO_NAIRA rate
 export const DOLLAR_TO_NAIRA = 800;

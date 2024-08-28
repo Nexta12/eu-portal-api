@@ -1,56 +1,72 @@
-# # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-# # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
-# name: Integration Workflow
+name: Integration Workflow
 
-# on:
-#   push:
-#     branches: ['main']
-#   pull_request:
-#     branches: ['main']
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-#     strategy:
-#       matrix:
-#         node-version: [16.x, 18.x]
+    strategy:
+      matrix:
+        node-version: [16.x, 18.x]
 
-#     steps:
-#       - name: Checkout Repository
-#         uses: actions/checkout@v3
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-#       - name: Use Node.js ${{ matrix.node-version }}
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: ${{ matrix.node-version }}
-#           cache: 'yarn'
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
 
-#       - name: Install Packages
-#         run: yarn install
+      - name: Install Packages
+        run: yarn install
 
-#       - name: Check for linting issues
-#         run: yarn run lint
+      - name: Check for linting issues
+        run: yarn run lint
 
-#       - name: Build dist
-#         run: yarn run dev:build
+      - name: Build dist
+        run: yarn run dev:build
 
-#       - name: Run tests
-#         env:
-#           CI: true
-#           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-#           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-#           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-#           POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-#           POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-#           SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
-#           PAYSTACK_SECRET_KEY: ${{ secrets.PAYSTACK_SECRET_KEY }}
-#           CLIENT_BASE_URL: ${{ secrets.CLIENT_BASE_URL }}
-#           SYNCHRONIZE_DB: true
-#           USE_TS_ENTITY_MIGRATION: true,
-#           CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
-#           CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
-#           CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
-#         run: yarn test
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Set up SSH Connection
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.SERVER_IP}}
+          username: ${{secrets.USERNAME}}
+          passphrase: ${{secrets.PASSWORD}}
+          key: ${{secrets.SERVER_SSH_KEY}}
+          port: ${{secrets.PORT}}
+          script: |
+            set -e
+            echo "Changing directory to /www/wwwroot/APIs/euapi"
+            cd /www/wwwroot/APIS/euapi || {echo "Failed to change directory"; exit 1;}
+            echo "Pulling Latest code from origin/main"
+            git pull origin main || { echo "Failed to pull latest code"; exit 1; }
+            echo "Installing dependencies"
+            yarn install || {echo "Failed to install dependencies"; exit 1;}
+            echo "Stopping Server To rebuilt"
+            yarn run docker:stop || {echo "Couldn't Stop Docker containers"; exit 1;}
+            echo "Building Development Files"
+            yarn run docker:build || {echo "Failed to build development server"; exit 1;}
+            echo "Running deployment"
+            yarn run docker:run || {echo "Failed to start server"; exit 1;}
+            echo "Deployment successful"
+
+
+          

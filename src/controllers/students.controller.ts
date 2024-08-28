@@ -15,6 +15,7 @@ import { logger } from '../services';
 import { IExtendedRequest } from '../types/JwtPayload';
 import {
   BCRYPT_SALT_ROUNDS,
+  EMAIL_FROM,
   HTTP_STATUS,
   extractPublicIdFromUrl,
   handleGetRepository
@@ -108,21 +109,12 @@ export const createStudent = async (req: Request, res: Response) => {
 
     if (!password) {
       await sendEMail({
-        from: 'tech@revclient.com',
+        from: EMAIL_FROM,
         to: email,
         subject: 'Action Required: eUniversity Africa login details',
         html: generateApplicationEmailTemplate(firstName, userPassword)
       });
     }
-
-    // if (!password) {
-    //   await sendGridClient.send({
-    //     to: email,
-    //     from: EMAIL_FROM,
-    //     subject: 'Action Required: eUniversity Africa login details',
-    //     html: generateApplicationEmailTemplate(firstName, userPassword)
-    //   });
-    // }
 
     const student = studentRepository.create({
       firstName,

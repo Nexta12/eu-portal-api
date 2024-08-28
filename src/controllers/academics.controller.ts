@@ -18,6 +18,7 @@ import { generateAdmissionLetterEmailTemplate } from '../templates/emailTemplate
 import { IExtendedRequest } from '../types/JwtPayload';
 import { SemesterCourseType } from '../types/general';
 import {
+  EMAIL_FROM,
   HTTP_STATUS,
   calculateNextSemester,
   generateMatriculationNumber,
@@ -293,21 +294,12 @@ export const processAdmission = async (req: IExtendedRequest, res: Response) => 
     );
     if (status === ProcessAdmissionStatus.APPROVED) {
       await sendEMail({
-        from: 'tech@revclient.com',
+        from: EMAIL_FROM,
         to: student.email,
         subject: 'Welcome to eUniversity Africa',
         html: admissionLetter
       });
     }
-
-    // if (status === ProcessAdmissionStatus.APPROVED) {
-    //   await sendGridClient.send({
-    //     to: student.email,
-    //     from: EMAIL_FROM,
-    //     subject: 'Welcome to eUniversity Africa',
-    //     html: admissionLetter
-    //   });
-    // }
 
     return res.status(HTTP_STATUS.OK.code).send({
       message: 'Admission processed successfully'

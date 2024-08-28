@@ -5,7 +5,7 @@ import {FindOptionsSelect, Not } from 'typeorm';
 
 import {  StaffEntity } from '../entities';
 import { logger } from '../services';
-import { HTTP_STATUS, handleGetRepository } from '../utils';
+import { EMAIL_FROM, HTTP_STATUS, handleGetRepository } from '../utils';
 import { sendEMail } from '../config/nodemailerClient';
 import { generateAdminRegisterEmailTemplate } from '../templates/emailTemplates';
 
@@ -108,8 +108,9 @@ export const createStaff = async (req: Request, res: Response) => {
     const results = await staffRepository.save(newStaff);
 
     // todo: send email to staff with password
+    logger.info(EMAIL_FROM)
     await sendEMail({
-      from: 'tech@revclient.com',
+      from: EMAIL_FROM,
       to: email,
       subject: 'Action Required: eUniversity Africa login details',
       html: generateAdminRegisterEmailTemplate(firstName, password)
