@@ -58,12 +58,13 @@ jobs:
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.USERNAME }}
+          passphrase: ${{secrets.PASSWORD}}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.PORT }}
           script: |
             set -e
-            echo "Changing directory to /www/wwwroot/APIs/euapi"
-            if ! cd /www/wwwroot/APIs/euapi; then
+            echo "Changing directory to /www/wwwroot/APIS/euapi"
+            if ! cd /www/wwwroot/APIS/euapi; then
               echo "Failed to change directory"
               exit 1
             fi
