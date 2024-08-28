@@ -65,7 +65,7 @@ jobs:
             set -e
             echo "Changing directory to /www/wwwroot/APIS/euapi"
             if ! cd /www/wwwroot/APIS/euapi; then
-              echo "Failed to change directory as required"
+              echo "Failed to change directory"
               exit 1
             fi
             echo "Pulling latest code from origin/main"
