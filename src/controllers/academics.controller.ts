@@ -135,7 +135,7 @@ export const getCurrentSemester = async (req: IExtendedRequest, res: Response) =
 
     if (!academicsRecord) {
       return res.status(HTTP_STATUS.NOT_FOUND.code).send({
-        message: 'This student has no active semester'
+        message: 'This learner has no active semester'
       });
     }
 
@@ -247,13 +247,13 @@ export const processAdmission = async (req: IExtendedRequest, res: Response) => 
 
     if (!student) {
       return res.status(HTTP_STATUS.NOT_FOUND.code).send({
-        message: 'Student not found'
+        message: 'Learner not found'
       });
     }
 
     if (student.admissionStatus !== AdmissionStatus.IN_REVIEW) {
       return res.status(HTTP_STATUS.CONFLICT.code).send({
-        message: 'Student is not eligible for admission'
+        message: 'Learner is not eligible for admission'
       });
     }
 

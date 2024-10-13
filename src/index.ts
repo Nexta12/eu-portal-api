@@ -20,12 +20,12 @@ const main = async () => {
   try {
 
     const adminDetails: DeepPartial<StaffEntity> = {
-      firstName: 'Ernest',
-      lastName: 'Udeze',
-      email: 'ernestez12@gmail.com',
-      password: await bcrypt.hash('select12', 10),
+      firstName: process.env.FIRSTNAME,
+      lastName: process.env.LASTNAME,
+      email: process.env.EMAIL,
+      password: await bcrypt.hash(process.env.PASSWORD, 10),
       gender: Gender.MALE,
-      phoneNumber: '08134728997',
+      phoneNumber: process.env.PHONENUMBER,
       address: 'Lagos Nigeria',
       role: UserRole.ADMIN,
       dateOfEmployment: new Date('1990-06-15'),
@@ -33,11 +33,13 @@ const main = async () => {
       designation: 'Software Developer',
     };
     await dataSource.AppDataSource.initialize();
-  
+
     const existingAdmin = await staffRepository.findOne({ where: { email: adminDetails.email } });
 
     if (existingAdmin) {
-      logger.info('Super Admin exists.');
+
+      logger.info('Super Admin exists');
+
     } else {
       const newAdmin = staffRepository.create(adminDetails);
       await staffRepository.save(newAdmin);

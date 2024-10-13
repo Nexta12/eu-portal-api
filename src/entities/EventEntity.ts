@@ -9,7 +9,7 @@ export class EventEntity {
     @Column({ type: 'varchar', length: 255 })
     title: string;
 
-    @Column({ type: 'varchar', length: 20,  nullable: true})
+    @Column({ type: 'varchar', length: 255,  nullable: true})
     focus: string;
 
     @Column({ type: 'text' })
