@@ -31,7 +31,7 @@ export const testDatabaseConfig: DataSourceOptions = {
   username: 'root',
   database: 'test',
   password: 'easypass',
-  synchronize: true,
+  synchronize: false,
   dropSchema: true,
   entities: ['src/entities/**/*.ts']
 };
@@ -40,3 +40,5 @@ const AppDataSource = new DataSource(databaseConfig);
 const TestDataSource = new DataSource(testDatabaseConfig);
 
 export default { AppDataSource, TestDataSource };
+
+

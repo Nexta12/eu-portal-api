@@ -1,6 +1,8 @@
 export enum Gender {
   MALE = 'male',
-  FEMALE = 'female'
+  FEMALE = 'female',
+  UNDISCLOSED = 'undisclosed',
+  UNSPECIFIED = 'unspecified'
 }
 
 export enum UserRole {

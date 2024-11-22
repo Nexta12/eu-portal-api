@@ -13,17 +13,49 @@ import { ChatMessageEntity } from './ChatMessagesEntity';
 
 @Entity({ name: 'staffs' })
 export class StaffEntity extends User {
+
   @Column({ default: UserRole.STAFF, type: 'enum', enum: UserRole })
   role: UserRole;
 
   @Column({ nullable: true })
-  dateOfEmployment: Date;
+  dateOfEmployment?: Date | null;
 
   @Column({ nullable: true })
   cityOfResidence: string;
 
   @Column({ nullable: true })
   designation: string;
+
+  // Profile-specific fields
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  profilePicture: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  qualification: string;
+
+  @Column({ type: 'text', nullable: true })
+  certifications: string;
+
+  @Column({ type: 'text', nullable: true })
+  contributions: string;
+
+  @Column({ type: 'text', nullable: true })
+  description: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  middleName: string;
+
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  portfolio: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  department: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  location: string;
+
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  quote: string;
 
   @OneToMany(() => CourseEntity, course => course.facilitator)
   courses: CourseEntity[];
@@ -32,7 +64,7 @@ export class StaffEntity extends User {
   admissions: AdmissionEntity[];
 
   @OneToMany(() => BlogEntity, post => post.author)
-  posts: BlogEntity[]
+  posts: BlogEntity[];
 
   @OneToMany(() => NotificationEntity, notification => notification.author)
   notifications: NotificationEntity[];
@@ -48,5 +80,4 @@ export class StaffEntity extends User {
 
   @OneToMany(() => ChatMessageEntity, message => message.staff)
   chats: ChatMessageEntity[];
-
 }

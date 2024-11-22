@@ -383,7 +383,7 @@ export const submitApplication = async (req: IExtendedRequest, res: Response) =>
         .send({ message: HTTP_STATUS.NOT_FOUND.message });
     }
     await studentRepository.update({ userId }, { admissionStatus: AdmissionStatus.IN_REVIEW });
-    return res.status(HTTP_STATUS.OK.code).send({ message: 'Application submitted successfully' });
+    return res.status(HTTP_STATUS.OK.code).send({ message: 'Application successfully submitted' });
   } catch (error) {
     logger.error(error);
     return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR.code).send({ message: error.message });

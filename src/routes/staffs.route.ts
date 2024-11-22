@@ -8,10 +8,12 @@ import {
   updateStaffRecord
 } from '../controllers';
 import {
+  blogImageUploader,
   checkJwt,
   checkRole,
   createStaffValidationRules,
   updateStaffValidationRules,
+  uploadBlogImage,
   validate
 } from '../middleware';
 
@@ -34,10 +36,12 @@ router.put(
   '/update/:id',
   checkJwt,
   checkRole(['admin', 'staff']),
+  uploadBlogImage, blogImageUploader, // re-using blog Image middleware to upload profilePicture
   updateStaffValidationRules(),
   validate,
   updateStaffRecord
 );
+
 
 router.delete('/delete/:id', checkJwt, checkRole(['admin']), deleteStaff);
 

@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 
 import bcrypt from 'bcryptjs';
-import {FindOptionsSelect, Not } from 'typeorm';
+import { FindOptionsSelect, Not } from 'typeorm';
 
-import {  StaffEntity } from '../entities';
-import { logger } from '../services';
-import { EMAIL_FROM, HTTP_STATUS, handleGetRepository } from '../utils';
 import { sendEMail } from '../config/nodemailerClient';
+import { StaffEntity } from '../entities';
+import { logger } from '../services';
 import { generateAdminRegisterEmailTemplate } from '../templates/emailTemplates';
+import { EMAIL_FROM, HTTP_STATUS, handleGetRepository } from '../utils';
 
 const columnsToFetch = [
   'userId',
@@ -48,7 +48,7 @@ export const getStaffById = async (req: Request, res: Response) => {
     const staffRepository = handleGetRepository(StaffEntity);
     const staff = await staffRepository.findOne({
       where: { userId: id },
-      select: columnsToFetch as FindOptionsSelect<StaffEntity>
+      // select: columnsToFetch as FindOptionsSelect<StaffEntity>
     });
     if (!staff) {
       return res
@@ -108,13 +108,12 @@ export const createStaff = async (req: Request, res: Response) => {
     const results = await staffRepository.save(newStaff);
 
     // todo: send email to staff with password
-    logger.info(EMAIL_FROM)
     await sendEMail({
       from: EMAIL_FROM,
       to: email,
       subject: 'Action Required: eUniversity Africa login details',
       html: generateAdminRegisterEmailTemplate(firstName, password)
-    })
+    });
 
     return res.status(HTTP_STATUS.CREATED.code).send({
       message: HTTP_STATUS.CREATED.message,
@@ -140,9 +139,18 @@ export const updateStaffRecord = async (req: Request, res: Response) => {
     gender,
     phoneNumber,
     address,
-    dateOfEmployment,
     cityOfResidence,
-    designation
+    designation,
+    middleName,
+    description,
+    quote,
+    contributions,
+    location,
+    portfolio,
+    department,
+    qualification,
+    certifications,
+    blogImage 
   } = req.body;
 
   try {
@@ -160,13 +168,21 @@ export const updateStaffRecord = async (req: Request, res: Response) => {
       gender,
       phoneNumber,
       address,
-      dateOfEmployment,
       cityOfResidence,
-      designation
+      designation,
+      middleName,
+      description,
+      quote,
+      contributions,
+      location,
+      portfolio,
+      department,
+      qualification,
+      certifications,
+      profilePicture: blogImage
     });
 
     const updatedStaff = await staffRepository.findOneBy({ userId: id });
-
     return res.status(HTTP_STATUS.OK.code).send({
       message: HTTP_STATUS.OK.message,
       data: {
@@ -199,4 +215,3 @@ export const deleteStaff = async (req: Request, res: Response) => {
     return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR.code).send({ message: error.message });
   }
 };
-

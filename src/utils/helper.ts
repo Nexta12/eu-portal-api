@@ -1,10 +1,11 @@
 /* eslint-disable unicorn/prefer-string-replace-all */
 import { nanoid } from 'nanoid';
+import slugify from 'slugify';
 
 import path from 'node:path';
-import slugify from 'slugify';
-import handleGetRepository from './handleGetRepository';
+
 import { BlogEntity } from '../entities';
+import handleGetRepository from './handleGetRepository';
 
 export const generateFiveDigitNumber = () => {
   const randomNumber = Math.floor(Math.random() * 100_000);
@@ -41,21 +42,22 @@ interface Author {
   userId: string;
   firstName: string;
   lastName: string;
-  // Add other fields as necessary
+  profilePicture?: string;
 }
 
 interface TransformedAuthor {
   userId: string;
   firstName: string;
   lastName: string;
+  profilePicture?: string;
 }
 
 export const transformAuthor = (author: Author): TransformedAuthor => ({
-    userId: author.userId,
-    firstName: author.firstName,
-    lastName: author.lastName,
-  });
-
+  userId: author.userId,
+  firstName: author.firstName,
+  lastName: author.lastName,
+  profilePicture: author.profilePicture
+});
 
 export const generateUniqueSlug = async (title: string): Promise<string> => {
   const blogRepository = handleGetRepository(BlogEntity);
@@ -65,7 +67,7 @@ export const generateUniqueSlug = async (title: string): Promise<string> => {
   const existingBlogs = await blogRepository.find({ select: ['slug'] }); // Retrieve only the slugs
 
   // Collect all existing slugs in a Set for quick lookup
-  const existingSlugs = new Set(existingBlogs.map(blog => blog.slug));
+  const existingSlugs = new Set(existingBlogs.map((blog) => blog.slug));
 
   let counter = 1;
   let uniqueSlug = slug;
@@ -87,5 +89,3 @@ export const getSnippet = (text: string | undefined, wordLimit: number) => {
   }
   return words.slice(0, wordLimit).join(' ');
 };
-
-
